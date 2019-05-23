@@ -1,0 +1,37 @@
+PODS:
+  - GsonJ2ObjC-Light (2.3.1):
+    - J2ObjC/JreCore (= 2.1.1)
+  - J2ObjC/JreCore (2.1.1)
+  - J2ObjC/JreUtil (2.1.1):
+    - J2ObjC/JreCore
+  - SocketRocket (0.5.1)
+  - TapkeyMobileLib (1.15.12.0):
+    - GsonJ2ObjC-Light (= 2.3.1)
+    - J2ObjC/JreCore (= 2.1.1)
+    - J2ObjC/JreUtil (= 2.1.1)
+    - SocketRocket (= 0.5.1)
+  - witte-mobile-library (1.0.0)
+
+DEPENDENCIES:
+  - TapkeyMobileLib (= 1.15.12.0)
+  - witte-mobile-library (= 1.0.0)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - SocketRocket
+    - witte-mobile-library
+  https://github.com/tapkey/TapkeyCocoaPods:
+    - GsonJ2ObjC-Light
+    - J2ObjC
+    - TapkeyMobileLib
+
+SPEC CHECKSUMS:
+  GsonJ2ObjC-Light: 7af804901ea91c191a4a09c672c4a6a50d0a5cf7
+  J2ObjC: 60b272030c7a33f4e0e464f9a7320dd3e23d9614
+  SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
+  TapkeyMobileLib: 27ee7778dbbd34563879802c322c851cc779fa04
+  witte-mobile-library: 3d02d77e5226a6f79e19b5f913e128e0e644c65c
+
+PODFILE CHECKSUM: 6053a7137d505048ea87eb84337dd7a4ea38dcdd
+
+COCOAPODS: 1.6.0
