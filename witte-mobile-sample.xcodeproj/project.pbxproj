@@ -389,15 +389,17 @@
 			baseConfigurationReference = 469D9C4C95121264CA94EB6C /* Pods-witte-mobile-sample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 56A265RG7V;
+				DEVELOPMENT_TEAM = 54BW5K8Y67;
 				INFOPLIST_FILE = "witte-mobile-sample/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "venqoo.witte-mobile-sample";
+				PRODUCT_BUNDLE_IDENTIFIER = "digital.witte.witte-mobile-sample";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -408,15 +410,17 @@
 			baseConfigurationReference = 0D4335AEA394B2E0F2730ABC /* Pods-witte-mobile-sample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 56A265RG7V;
+				DEVELOPMENT_TEAM = 54BW5K8Y67;
 				INFOPLIST_FILE = "witte-mobile-sample/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "venqoo.witte-mobile-sample";
+				PRODUCT_BUNDLE_IDENTIFIER = "digital.witte.witte-mobile-sample";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

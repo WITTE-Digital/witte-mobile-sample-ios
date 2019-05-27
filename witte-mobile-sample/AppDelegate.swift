@@ -12,17 +12,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    // Your WITTE customer ID
-    private let _witteCustomerId: Int = <add your customer id here>
+    // Your WITTE Customer Id.
+    // TODO: Add your WITTE Customer Id here.
+    private let _witteCustomerId: Int = -1;
+
+    // Your WITTE SDK Key.
+    // TODO: Add your WITTE SDK Key here.
+    private let _witteSdkKey: String = "Todo: Add your WITTE sdk key here"
+
+    // Your WITTE Subscription Key.
+    // TODO: Add your WITTE Subscription Key here.
+    private let _witteSubscriptionKey: String = "Todo: Add your WITTE subscription key here"
     
-    // Your WITTE SDK Key
-    private let _witteSdkKey: String = <add your sdk key here>
-    
-    // YOUR WITTE Subscription Key
-    private let _witteSubscriptionKey: String = <add your subscription key here>
-    
-    // User Id of one specific WITTE user (this needs to be retrieved at runtime in production apps)
-    private let _witteUserId = <add a user id here>
+    // User Id of one specific WITTE user (this needs to be retrieved at runtime in production apps).
+    // TODO: Add your WITTE User Id here.
+    private let _witteUserId = -1
     
     private var _witteConfiguration: WDConfiguration!
     private var _witteIdentityProvider: WitteIdentityProvider!

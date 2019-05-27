@@ -8,6 +8,42 @@ The WITTE mobile sample for iOS is a sample iOS project illustrating the basic s
 * Trigger (open/close) a box
 
 ## Getting Started
+
+### Install CocoaPods dependencies
+Dependencies are managed using CocoaPods. Before you can compile the sample app you need to run 'pod install' on the command line.
+```
+witte-mobile-sample-ios$ pod install
+```
+
+### Add your WITTE Customer ID, SDK Key and Subscription Key 
+
+```swift
+// AppDelegate.swift
+
+// Your WITTE Customer Id.
+// TODO: Add your WITTE Customer Id here.
+private let _witteCustomerId: Int = -1;
+
+// Your WITTE SDK Key.
+// TODO: Add your WITTE SDK Key here.
+private let _witteSdkKey: String = "Todo: Add your WITTE sdk key here"
+
+// Your WITTE Subscription Key.
+// TODO: Add your WITTE Subscription Key here.
+private let _witteSubscriptionKey: String = "Todo: Add your WITTE subscription key here"
+```
+
+### Add a WITTE User ID
+For the sake of simplicity this sample app uses a single user ID which is hard coded in the App class. Before you can actually use this sample app to open and close flinkey boxes you need to create a user in the WITTE backend and assign the constant WitteUserId with your users ID.  
+
+```swift
+// AppDelegate.swift
+
+// User Id of one specific WITTE user (this needs to be retrieved at runtime in production apps).
+// TODO: Add your WITTE User Id here.
+private let _witteUserId = -1
+```
+
 ### Authentication
 A user needs to be authenticated with the Tapkey backend via the Tapkey Mobile Library. This is achived using a Java Web Token - the idToken - that is retrieved from the Tapkey backend and passed on to the Tapkey Mobile Library.
 
