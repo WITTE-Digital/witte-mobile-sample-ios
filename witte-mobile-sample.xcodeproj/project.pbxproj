@@ -3,13 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8C3B38A1238AC8BC00523EA2 /* WitteTokenRefreshHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3B38A0238AC8BC00523EA2 /* WitteTokenRefreshHandler.swift */; };
 		B9D43EA49F5CBA2BBA405612 /* Pods_witte_mobile_sample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59EB7D9605B9F7D9ED05068A /* Pods_witte_mobile_sample.framework */; };
-		D40AC0862292F673007E42AF /* WitteIdentityProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40AC0852292F673007E42AF /* WitteIdentityProvider.swift */; };
-		D40AC0882293235E007E42AF /* WitteIdentityFunc.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40AC0872293235E007E42AF /* WitteIdentityFunc.swift */; };
+		D40AC0862292F673007E42AF /* WitteTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40AC0852292F673007E42AF /* WitteTokenProvider.swift */; };
 		D4EDF2B3228C4F2100198FC9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EDF2B2228C4F2100198FC9 /* AppDelegate.swift */; };
 		D4EDF2B5228C4F2100198FC9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EDF2B4228C4F2100198FC9 /* ViewController.swift */; };
 		D4EDF2B8228C4F2100198FC9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D4EDF2B6228C4F2100198FC9 /* Main.storyboard */; };
@@ -21,8 +21,8 @@
 		0D4335AEA394B2E0F2730ABC /* Pods-witte-mobile-sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-witte-mobile-sample.release.xcconfig"; path = "Target Support Files/Pods-witte-mobile-sample/Pods-witte-mobile-sample.release.xcconfig"; sourceTree = "<group>"; };
 		469D9C4C95121264CA94EB6C /* Pods-witte-mobile-sample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-witte-mobile-sample.debug.xcconfig"; path = "Target Support Files/Pods-witte-mobile-sample/Pods-witte-mobile-sample.debug.xcconfig"; sourceTree = "<group>"; };
 		59EB7D9605B9F7D9ED05068A /* Pods_witte_mobile_sample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_witte_mobile_sample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D40AC0852292F673007E42AF /* WitteIdentityProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WitteIdentityProvider.swift; sourceTree = "<group>"; };
-		D40AC0872293235E007E42AF /* WitteIdentityFunc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WitteIdentityFunc.swift; sourceTree = "<group>"; };
+		8C3B38A0238AC8BC00523EA2 /* WitteTokenRefreshHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WitteTokenRefreshHandler.swift; sourceTree = "<group>"; };
+		D40AC0852292F673007E42AF /* WitteTokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WitteTokenProvider.swift; sourceTree = "<group>"; };
 		D4EDF2AF228C4F2100198FC9 /* witte-mobile-sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "witte-mobile-sample.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4EDF2B2228C4F2100198FC9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D4EDF2B4228C4F2100198FC9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -79,8 +79,8 @@
 				D4EDF2B9228C4F2300198FC9 /* Assets.xcassets */,
 				D4EDF2BB228C4F2300198FC9 /* LaunchScreen.storyboard */,
 				D4EDF2BE228C4F2300198FC9 /* Info.plist */,
-				D40AC0852292F673007E42AF /* WitteIdentityProvider.swift */,
-				D40AC0872293235E007E42AF /* WitteIdentityFunc.swift */,
+				D40AC0852292F673007E42AF /* WitteTokenProvider.swift */,
+				8C3B38A0238AC8BC00523EA2 /* WitteTokenRefreshHandler.swift */,
 			);
 			path = "witte-mobile-sample";
 			sourceTree = "<group>";
@@ -170,18 +170,11 @@
 			files = (
 			);
 			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-witte-mobile-sample/Pods-witte-mobile-sample-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework",
-				"${BUILT_PRODUCTS_DIR}/witte-mobile-library/witte_mobile_library.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-witte-mobile-sample/Pods-witte-mobile-sample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketRocket.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/witte_mobile_library.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-witte-mobile-sample/Pods-witte-mobile-sample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -216,16 +209,11 @@
 			files = (
 			);
 			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-witte-mobile-sample/Pods-witte-mobile-sample-resources.sh",
-				"${PODS_ROOT}/TapkeyMobileLib/TapkeyMobileLib.framework/TapkeyMobileLib.bundle",
+				"${PODS_ROOT}/Target Support Files/Pods-witte-mobile-sample/Pods-witte-mobile-sample-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TapkeyMobileLib.bundle",
+				"${PODS_ROOT}/Target Support Files/Pods-witte-mobile-sample/Pods-witte-mobile-sample-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -239,10 +227,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D40AC0862292F673007E42AF /* WitteIdentityProvider.swift in Sources */,
+				8C3B38A1238AC8BC00523EA2 /* WitteTokenRefreshHandler.swift in Sources */,
+				D40AC0862292F673007E42AF /* WitteTokenProvider.swift in Sources */,
 				D4EDF2B5228C4F2100198FC9 /* ViewController.swift in Sources */,
 				D4EDF2B3228C4F2100198FC9 /* AppDelegate.swift in Sources */,
-				D40AC0882293235E007E42AF /* WitteIdentityFunc.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -391,7 +379,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 54BW5K8Y67;
+				DEVELOPMENT_TEAM = J4N5TT7VQW;
 				INFOPLIST_FILE = "witte-mobile-sample/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -412,7 +400,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 54BW5K8Y67;
+				DEVELOPMENT_TEAM = J4N5TT7VQW;
 				INFOPLIST_FILE = "witte-mobile-sample/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

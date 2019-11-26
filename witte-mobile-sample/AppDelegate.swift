@@ -29,8 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private let _witteUserId = -1
     
     private var _witteConfiguration: WDConfiguration!
-    private var _witteIdentityProvider: WitteIdentityProvider!
-    private var _tapkeyServiceFactory: TapkeyServiceFactory!
+    private var _witteTokenProvider: WitteTokenProvider!
+    private var _tapkeyServiceFactory: TKMServiceFactory!
 
     //
     // Customer specific configuration
@@ -40,14 +40,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     //
+    // WitteTokenProvider
     //
-    //
-    public var witteIdentityProvider: WitteIdentityProvider {
-        get { return _witteIdentityProvider }
+    public var witteTokenProvider: WitteTokenProvider {
+        get { return _witteTokenProvider }
     }
 
     //
-    //
+    // The users id
     //
     public var witteUserId: Int {
         get { return _witteUserId }
@@ -56,7 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //
     // The TapkeyServiceFactory holds all needed services
     //
-    public var tapkeyServiceFactory: TapkeyServiceFactory {
+    public var tapkeyServiceFactory: TKMServiceFactory {
         get { return _tapkeyServiceFactory }
     }
 
@@ -68,23 +68,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 sdkKey: _witteSdkKey,
                 subscriptionKey: _witteSubscriptionKey)
 
-        // instantiate the WITTE identity provider
-        _witteIdentityProvider = WitteIdentityProvider(
+        // instantiate the WITTE token provider
+        _witteTokenProvider = WitteTokenProvider(
                 withConfiguration: _witteConfiguration,
                 andUserId: _witteUserId)
 
+        // Tapkey configuration
+        let config = TKMEnvironmentConfigBuilder()
+            .setbleServiceUuid(WD_BLE_SERIVCE_UUID)
+            .setTenantId(WD_TENANT_ID)
+            .build()
+        
         // instantiate the Tapkey service factory builder
-        _tapkeyServiceFactory = TapkeyServiceFactoryBuilder()
-                // configure the Tapkey SDK to use the WITTE tenant (wma)
-                .setTenantId(tenantId: WD_TENANT_ID)
-                // set the BLE service UUID of flinkey boxes
-                .setBleServiceUuid(bleServiceUuid: WD_BLE_SERIVCE_UUID)
-                .build();
-
-        // register the WITTE identity provider
-        _ = _tapkeyServiceFactory.getIdentityProviderRegistration().registerIdentityProvider(
-                ipId: WD_IP_ID,
-                identityProvider: _witteIdentityProvider)
+        _tapkeyServiceFactory = TKMServiceFactoryBuilder()
+            .setConfig(config)
+            .setTokenRefreshHandler(WitteTokenRefreshHandler(tokenProvider: _witteTokenProvider))
+            .build()
 
         return true
     }
@@ -93,11 +92,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Let Tapkey poll for notifications.
         // Run the code via runAsyncInBackground to prevent app from sleeping while fetching is in progress.
-        runAsyncInBackground(application, promise: self._tapkeyServiceFactory!.getPollingManager().poll(with: nil, with: NetTpkyMcConcurrentCancellationTokens_None)
-                .finallyOnUi {
-                    completionHandler(UIBackgroundFetchResult.newData);
-                }
-        );
+        runAsyncInBackground(application, promise:
+            self.tapkeyServiceFactory.notificationManager
+                    .pollForNotificationsAsync(cancellationToken: TKMCancellationTokens.None)
+                    .finallyOnUi {
+                        completionHandler(UIBackgroundFetchResult.newData)
+                    }
+        )
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
