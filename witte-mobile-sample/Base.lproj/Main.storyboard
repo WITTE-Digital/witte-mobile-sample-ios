@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina6_1" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -20,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="top" axis="vertical" distribution="equalSpacing" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Bjw-aX-X8x">
-                                <rect key="frame" x="20" y="64" width="374" height="400.5"/>
+                                <rect key="frame" x="20" y="64" width="374" height="499"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your Customer ID:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6yN-ko-L0H">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="20.5"/>
@@ -96,33 +94,42 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="e.g. C1-1F-8E-7C" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oit-nN-pOR">
-                                        <rect key="frame" x="0.0" y="294.5" width="374" height="30"/>
-                                        <nil key="textColor"/>
+                                        <rect key="frame" x="0.0" y="294.5" width="374" height="34"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                         <connections>
                                             <action selector="actionBoxIdChanged:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="zUf-aq-RTk"/>
                                         </connections>
                                     </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DPp-MG-xEf">
+                                        <rect key="frame" x="0.0" y="336.5" width="374" height="30"/>
+                                        <state key="normal" title="Trigger Lock"/>
+                                        <connections>
+                                            <action selector="actionTriggerLock:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Xdm-hq-kg3"/>
+                                        </connections>
+                                    </button>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="XAV-FJ-2eM">
-                                        <rect key="frame" x="0.0" y="332.5" width="374" height="68"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DPp-MG-xEf">
-                                                <rect key="frame" x="0.0" y="0.0" width="374" height="30"/>
-                                                <state key="normal" title="Trigger Lock"/>
-                                                <connections>
-                                                    <action selector="actionTriggerLock:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Xdm-hq-kg3"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z8d-Xs-Bp6">
-                                                <rect key="frame" x="0.0" y="38" width="374" height="30"/>
-                                                <state key="normal" title="Reload Local Keys"/>
-                                                <connections>
-                                                    <action selector="actionReloadLocalKeys:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1NP-za-jtC"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
+                                        <rect key="frame" x="0.0" y="374.5" width="374" height="50"/>
                                     </stackView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Keys:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jTV-VT-mYK">
+                                        <rect key="frame" x="0.0" y="432.5" width="374" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eaD-5N-9KW">
+                                        <rect key="frame" x="0.0" y="461" width="374" height="0.0"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z8d-Xs-Bp6">
+                                        <rect key="frame" x="0.0" y="469" width="374" height="30"/>
+                                        <state key="normal" title="Query Local Keys"/>
+                                        <connections>
+                                            <action selector="actionReloadLocalKeys:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1NP-za-jtC"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                             </stackView>
                         </subviews>
@@ -140,6 +147,7 @@
                         <outlet property="_buttonReloadLocalKeys" destination="z8d-Xs-Bp6" id="k8J-3s-ud5"/>
                         <outlet property="_buttonTriggerLock" destination="DPp-MG-xEf" id="b9S-T7-mrP"/>
                         <outlet property="_labelCustomerId" destination="uNa-4F-j8V" id="Inp-N8-da4"/>
+                        <outlet property="_labelKeys" destination="eaD-5N-9KW" id="nw3-Nt-HNq"/>
                         <outlet property="_labelSdkKey" destination="Dnz-Ty-vcS" id="xGX-CU-s3j"/>
                         <outlet property="_labelSubscriptionKey" destination="ElB-m8-lu9" id="8WA-3X-l8l"/>
                         <outlet property="_labelUserId" destination="PEs-uW-neY" id="wUY-u8-tNR"/>

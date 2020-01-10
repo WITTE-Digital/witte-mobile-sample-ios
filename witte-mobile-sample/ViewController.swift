@@ -11,23 +11,25 @@ class ViewController: UIViewController {
 
     private var _witteConfiguration: WDConfiguration!
     private var _witteTokenProvider: WitteTokenProvider!
-    private var _witteUserId: Int = 0;
+    private var _witteUserId: Int = 0
 
-    private var _tapkeyKeyManager: TKMKeyManager?;
+    private var _tapkeyKeyManager: TKMKeyManager?
     private var _tapkeyUserManager: TKMUserManager?
-    private var _tapkeyBleLockScanner: TKMBleLockScanner?;
-    private var _tapkeyBleLockCommunicator: TKMBleLockCommunicator?;
-    private var _tapkeyCommandExecutionFacade: TKMCommandExecutionFacade?;
-    private var _tapkeyKeys: [TKMKeyDetails] = [];
+    private var _tapkeyBleLockScanner: TKMBleLockScanner?
+    private var _tapkeyBleLockCommunicator: TKMBleLockCommunicator?
+    private var _tapkeyCommandExecutionFacade: TKMCommandExecutionFacade?
+    private var _tapkeyNotificationManager: TKMNotificationManager?
+    private var _tapkeyKeys: [TKMKeyDetails] = []
 
-    private var _tapkeyStartForegroundScanRegistration: TKMObserverRegistration?;
-    private var _tapkeyKeyObserverRegistration: TKMObserverRegistration?;
-    private var _tapkeyBluetoothStateObserverRegistration: TKMObserverRegistration?;
+    private var _tapkeyStartForegroundScanRegistration: TKMObserverRegistration?
+    private var _tapkeyKeyObserverRegistration: TKMObserverRegistration?
+    private var _tapkeyBluetoothStateObserverRegistration: TKMObserverRegistration?
 
     @IBOutlet weak var _labelCustomerId: UILabel!
     @IBOutlet weak var _labelSubscriptionKey: UILabel!
     @IBOutlet weak var _labelSdkKey: UILabel!
     @IBOutlet weak var _labelUserId: UILabel!
+    @IBOutlet weak var _labelKeys: UILabel!
     @IBOutlet weak var _buttonLogin: UIButton!
     @IBOutlet weak var _buttonLogout: UIButton!
     @IBOutlet weak var _buttonTriggerLock: UIButton!
@@ -50,7 +52,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func actionReloadLocalKeys(_ sender: Any) {
-        reloadLocalKeys()
+        queryLocalKeys()
     }
     
     override func viewDidLoad() {
@@ -67,6 +69,7 @@ class ViewController: UIViewController {
         _tapkeyBleLockScanner = tapkeyServiceFactory.bleLockScanner
         _tapkeyBleLockCommunicator = tapkeyServiceFactory.bleLockCommunicator
         _tapkeyCommandExecutionFacade = tapkeyServiceFactory.commandExecutionFacade
+        _tapkeyNotificationManager = tapkeyServiceFactory.notificationManager
 
         // update label content
         _labelCustomerId.text = String(_witteConfiguration.witteCustomerId)
@@ -101,6 +104,7 @@ class ViewController: UIViewController {
             _buttonLogout.isEnabled = false
             _buttonTriggerLock.isEnabled = false
             _buttonReloadLocalKeys.isEnabled = false
+            _labelKeys.text = ""
         }
         else {
             // user is authenticated
@@ -123,15 +127,21 @@ class ViewController: UIViewController {
                     // login to Tapkey backend
                     self._tapkeyUserManager!.logInAsync(accessToken: accesToken!, cancellationToken: TKMCancellationTokens.None)
                         .continueOnUi{ (userId: String?) -> Void in
-                            
                             // update ui
                             self.updateButtonStates()
                             
                             // start scanning for flinkey boxes
                             self.startScanning()
                             
-                            // refresh list of local keys
-                            self.reloadLocalKeys()
+                            // retrieve keys for the current user
+                            self._tapkeyNotificationManager!.pollForNotificationsAsync(cancellationToken: TKMCancellationTokens.None)
+                            .continueOnUi({ Void in
+                                self.queryLocalKeys()
+                                return nil
+                            })
+                            .catchOnUi({ (error: TKMAsyncError) -> Void in
+                            })
+                            .conclude();
                         }
                         .catchOnUi{(error) -> Void in
                             print("Authentication failed.")
@@ -154,6 +164,11 @@ class ViewController: UIViewController {
             _tapkeyUserManager!
                 .logOutAsync(userId: userId, cancellationToken: TKMCancellationTokens.None)
                 .continueOnUi{_ in
+                }
+                .catchOnUi({ (error: TKMAsyncError) -> Void in
+                    print(error.localizedDescription)
+                })
+                .finallyOnUi {
                     self.updateButtonStates()
                 }
                 .conclude()
@@ -185,12 +200,37 @@ class ViewController: UIViewController {
     //
     // query for this user's keys asynchronously
     //
-    private func reloadLocalKeys() {
+    private func queryLocalKeys() {
         if isUserLoggedIn() {
             let userId = _tapkeyUserManager!.users[0]
             _tapkeyKeyManager!.queryLocalKeysAsync(userId: userId, cancellationToken: TKMCancellationTokens.None)
                     .continueOnUi { (keys: [TKMKeyDetails]?) -> Void in
                         self._tapkeyKeys = keys ?? [];
+                        
+                        var sb = ""
+                        for key in self._tapkeyKeys {
+                            let grant = key.grant
+                            if(nil != grant) {
+                                let physicalLockId = grant?.getBoundLock()?.getPhysicalLockId();
+                                let boxId = WDBoxIdConverter().toBoxId(withPhysicalLockId: physicalLockId!)
+                                let grantValidFrom = grant?.getValidFrom()?.toDate() ?? nil
+                                let grantValidBefore = grant?.getValidBefore()?.toDate() ?? nil
+                                let keyValidBefore = key.validBefore
+                                
+                                sb.append("• \(boxId)\n")
+                                sb.append(" grant starts: \(self.toIsoString(date: grantValidFrom))\n")
+                                if(nil != grantValidBefore) {
+                                    sb.append(" grant ends: \(self.toIsoString(date: grantValidBefore))\n")
+                                }
+                                else {
+                                    sb.append(" grant ends: unlimited\n")
+                                }
+                                
+                                sb.append(" valid before: \(self.toIsoString(date: keyValidBefore))\n")
+                            }
+                        }
+                        
+                        self._labelKeys.text = sb
                     }
                     .catchOnUi({ (error: TKMAsyncError) -> Void? in
                         print("Query local keys failed.")
@@ -200,6 +240,17 @@ class ViewController: UIViewController {
         }
     }
 
+    open func toIsoString(date: Date?) -> String {
+        var str = ""
+        
+        if (date != nil) {
+            let formatter = ISO8601DateFormatter()
+            str = formatter.string(from: date!)
+        }
+        
+        return str;
+    }
+    
     //
     // Open/close the flinkey box
     //
@@ -286,7 +337,7 @@ class ViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         if (nil == _tapkeyKeyObserverRegistration) {
             _tapkeyKeyObserverRegistration = _tapkeyKeyManager?.keyUpdateObservable.addObserver({ _ in
-                print("local keys changed")
+                self.queryLocalKeys()
             })
         }
 
