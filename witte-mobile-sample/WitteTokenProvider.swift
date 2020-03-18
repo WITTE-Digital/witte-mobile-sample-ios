@@ -22,12 +22,14 @@ class WitteTokenProvider {
         let promiseSource = TKMPromiseSource<String>()
 
         TKMAsync.executeAsync({() -> String? in
-                // retrieve WITTE idToken
+                // Retrieve the WITTE idToken.
+                // Note: The WITTE backend should not be called from within the mobile
+                // application in production environments.
                 let request = WDIdTokenRequest()
                 let idToken = request.execute(with: self._witteConfiguration, andUserId: self._witteUserId)
                 return idToken
             }).continueOnUi{(idToken) -> String in
-                // exchange the WITTE idToken for a Tapkey access token
+                // Retrieve the Tapkey access token via token exchange.
                 var urlComponents: URLComponents = URLComponents()
                 urlComponents.scheme = "https"
                 urlComponents.host = "login.tapkey.com"

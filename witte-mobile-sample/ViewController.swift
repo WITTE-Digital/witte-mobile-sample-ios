@@ -291,16 +291,30 @@ class ViewController: UIViewController {
             return;
         }
         
+        // 60s timeout
+        let timeoutMs: Int32 = 60 * 1000
+        let timeout = TKMCancellationTokens.fromTimeout(timeoutMs: timeoutMs)
+        
         let bluetoothAddress = _tapkeyBleLockScanner!.getLock(physicalLockId: physicalLockId)?.bluetoothAddress
         if(nil != bluetoothAddress) {
             _tapkeyBleLockCommunicator!
                 .executeCommandAsync(
                     bluetoothAddress: bluetoothAddress!,
                     physicalLockId: physicalLockId,
-                    commandFunc: { tlcpConnection in self._tapkeyCommandExecutionFacade!.triggerLockAsync(tlcpConnection, cancellationToken: TKMCancellationTokens.None)},
-                    cancellationToken: TKMCancellationTokens.None)
+                    commandFunc: { tlcpConnection in self._tapkeyCommandExecutionFacade!.triggerLockAsync(tlcpConnection, cancellationToken: timeout)},
+                    cancellationToken: timeout)
                 .continueOnUi{ (commandResult: TKMCommandResult?) -> Bool? in
-                    if commandResult?.code == TKMCommandResult.TKMCommandResultCode.ok {
+                    var success = false
+                                        
+                    // The TKMCommandResultCode indicates if triggerLockAsync completed successfully
+                    // or if an error occurred during the execution of the command.
+                    // https://developers.tapkey.io/mobile/ios/reference/TapkeyMobileLib/latest/Classes/TKMCommandResult.html
+                    let commandResultCode: TKMCommandResult.TKMCommandResultCode =
+                        commandResult?.code ?? TKMCommandResult.TKMCommandResultCode.technicalError
+                    
+                    switch commandResultCode {
+                    case TKMCommandResult.TKMCommandResultCode.ok:
+                            success = true
                         let responseData = commandResult?.responseData
                         if(nil != responseData) {
                             let bytes = responseData! as! IOSByteArray
@@ -316,15 +330,30 @@ class ViewController: UIViewController {
                             else if(WDBoxState.drawerOpen == boxFeedback.boxState) {
                                 print("The drawer of the Box is open")
                             }
-                            
-                            return true
                         }
-                        else {
-                            return false
+                    case TKMCommandResult.TKMCommandResultCode.lockCommunicationError:
+                        print("A transport-level error occurred when communicating with the locking device")
+                    case TKMCommandResult.TKMCommandResultCode.lockDateTimeInvalid:
+                        print("Lock date/time are invalid.")
+                    case TKMCommandResult.TKMCommandResultCode.serverCommunicationError:
+                        print("An error occurred while trying to communicate with the Tapkey Trust Service (e.g. due to bad internet connection).")
+                    case TKMCommandResult.TKMCommandResultCode.technicalError:
+                        print("Some unspecific technical error has occurred.")
+                    case TKMCommandResult.TKMCommandResultCode.unauthorized:
+                        print("Communication with the security backend succeeded but the user is not authorized for the given command on this locking device.")
+                    case TKMCommandResult.TKMCommandResultCode.userSpecificError:
+                        // If there is a userSpecificError we need to have look at the list
+                        // of TKMUserCommandResults in order to determine what exactly caused the error
+                        // https://developers.tapkey.io/mobile/ios/reference/TapkeyMobileLib/latest/Classes/TKMCommandResult/TKMUserCommandResult.html
+                        let userCommandResults = commandResult?.userCommandResults
+                        for userCommandResult in userCommandResults! {
+                            print("triggerLockAsync failed with UserSpecificError and UserCommandResultCode \(userCommandResult.code)");
+                            print(userCommandResult.code)
                         }
+                    default:
+                        print("triggerLock failed with error")
                     }
-                    
-                    return false
+                        return success
                 }
                 .catchOnUi{ (error: TKMAsyncError) -> Bool? in
                     print("triggerLock failed")
