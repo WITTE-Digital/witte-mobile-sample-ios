@@ -7,6 +7,6 @@ use_frameworks!
 target 'witte-mobile-sample' do
   # Pods for witte-mobile-sample
   pod 'AppAuth'
-  pod 'TapkeyMobileLib', '2.5.18.0'
+  pod 'TapkeyMobileLib', '2.7.2.0'
   pod 'witte-mobile-library', '1.0.0'
 end
