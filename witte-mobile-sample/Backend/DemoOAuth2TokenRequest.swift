@@ -6,6 +6,9 @@ import TapkeyMobileLib
  The corresponding functionality should be part of your backend implementation instead.
  */
 class DemoOAuth2TokenRequest {
+    private let urlUAT: String = "https://api-uat.flinkey.de/v3/oauth2/token"
+    private let urlProd: String = "https://api.flinkey.de/v3/oauth2/token"
+
     /**
      Called to retrieve a flinkey API access token.
 
@@ -27,7 +30,7 @@ class DemoOAuth2TokenRequest {
         let postBodyBytes = Data(postBody.utf8)
 
         // create request
-        let url = URL(string: "https://api.flinkey.de/v3/oauth2/token")!
+        let url = URL(string: urlUAT)!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.httpBody = postBodyBytes
