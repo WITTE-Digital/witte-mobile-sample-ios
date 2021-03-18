@@ -7,22 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8C3B38A1238AC8BC00523EA2 /* WitteTokenRefreshHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3B38A0238AC8BC00523EA2 /* WitteTokenRefreshHandler.swift */; };
+		8C3B38A1238AC8BC00523EA2 /* TokenRefreshHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3B38A0238AC8BC00523EA2 /* TokenRefreshHandler.swift */; };
 		B9D43EA49F5CBA2BBA405612 /* Pods_witte_mobile_sample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59EB7D9605B9F7D9ED05068A /* Pods_witte_mobile_sample.framework */; };
-		D40AC0862292F673007E42AF /* WitteTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40AC0852292F673007E42AF /* WitteTokenProvider.swift */; };
+		D40AC0862292F673007E42AF /* TokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40AC0852292F673007E42AF /* TokenProvider.swift */; };
 		D4EDF2B3228C4F2100198FC9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EDF2B2228C4F2100198FC9 /* AppDelegate.swift */; };
 		D4EDF2B5228C4F2100198FC9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EDF2B4228C4F2100198FC9 /* ViewController.swift */; };
 		D4EDF2B8228C4F2100198FC9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D4EDF2B6228C4F2100198FC9 /* Main.storyboard */; };
 		D4EDF2BA228C4F2300198FC9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4EDF2B9228C4F2300198FC9 /* Assets.xcassets */; };
 		D4EDF2BD228C4F2300198FC9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D4EDF2BB228C4F2300198FC9 /* LaunchScreen.storyboard */; };
+		FC8D20B40268A234CBF7004C /* BackendAccessorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC8D2FD32D4DFF6261CCF12F /* BackendAccessorProtocol.swift */; };
+		FC8D25191E4EBF88D275088C /* DemoBackendAccessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC8D24B5FF523284D01B5283 /* DemoBackendAccessor.swift */; };
+		FC8D265DA3CCF55547DEFB7F /* DemoSdkTokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC8D223943B1C171B8B49AF2 /* DemoSdkTokenRequest.swift */; };
+		FC8D2D7E1733BE3A325495D7 /* DemoOAuth2TokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC8D2CB5E28424C3C06643D9 /* DemoOAuth2TokenRequest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0D4335AEA394B2E0F2730ABC /* Pods-witte-mobile-sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-witte-mobile-sample.release.xcconfig"; path = "Target Support Files/Pods-witte-mobile-sample/Pods-witte-mobile-sample.release.xcconfig"; sourceTree = "<group>"; };
 		469D9C4C95121264CA94EB6C /* Pods-witte-mobile-sample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-witte-mobile-sample.debug.xcconfig"; path = "Target Support Files/Pods-witte-mobile-sample/Pods-witte-mobile-sample.debug.xcconfig"; sourceTree = "<group>"; };
 		59EB7D9605B9F7D9ED05068A /* Pods_witte_mobile_sample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_witte_mobile_sample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8C3B38A0238AC8BC00523EA2 /* WitteTokenRefreshHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WitteTokenRefreshHandler.swift; sourceTree = "<group>"; };
-		D40AC0852292F673007E42AF /* WitteTokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WitteTokenProvider.swift; sourceTree = "<group>"; };
+		8C3B38A0238AC8BC00523EA2 /* TokenRefreshHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenRefreshHandler.swift; sourceTree = "<group>"; };
+		D40AC0852292F673007E42AF /* TokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenProvider.swift; sourceTree = "<group>"; };
 		D4EDF2AF228C4F2100198FC9 /* witte-mobile-sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "witte-mobile-sample.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4EDF2B2228C4F2100198FC9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D4EDF2B4228C4F2100198FC9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -30,6 +34,10 @@
 		D4EDF2B9228C4F2300198FC9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D4EDF2BC228C4F2300198FC9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D4EDF2BE228C4F2300198FC9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FC8D223943B1C171B8B49AF2 /* DemoSdkTokenRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DemoSdkTokenRequest.swift; path = Backend/DemoSdkTokenRequest.swift; sourceTree = "<group>"; };
+		FC8D24B5FF523284D01B5283 /* DemoBackendAccessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DemoBackendAccessor.swift; path = Backend/DemoBackendAccessor.swift; sourceTree = "<group>"; };
+		FC8D2CB5E28424C3C06643D9 /* DemoOAuth2TokenRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DemoOAuth2TokenRequest.swift; path = Backend/DemoOAuth2TokenRequest.swift; sourceTree = "<group>"; };
+		FC8D2FD32D4DFF6261CCF12F /* BackendAccessorProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BackendAccessorProtocol.swift; path = Backend/BackendAccessorProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,8 +87,12 @@
 				D4EDF2B9228C4F2300198FC9 /* Assets.xcassets */,
 				D4EDF2BB228C4F2300198FC9 /* LaunchScreen.storyboard */,
 				D4EDF2BE228C4F2300198FC9 /* Info.plist */,
-				D40AC0852292F673007E42AF /* WitteTokenProvider.swift */,
-				8C3B38A0238AC8BC00523EA2 /* WitteTokenRefreshHandler.swift */,
+				D40AC0852292F673007E42AF /* TokenProvider.swift */,
+				8C3B38A0238AC8BC00523EA2 /* TokenRefreshHandler.swift */,
+				FC8D2CB5E28424C3C06643D9 /* DemoOAuth2TokenRequest.swift */,
+				FC8D223943B1C171B8B49AF2 /* DemoSdkTokenRequest.swift */,
+				FC8D2FD32D4DFF6261CCF12F /* BackendAccessorProtocol.swift */,
+				FC8D24B5FF523284D01B5283 /* DemoBackendAccessor.swift */,
 			);
 			path = "witte-mobile-sample";
 			sourceTree = "<group>";
@@ -227,10 +239,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8C3B38A1238AC8BC00523EA2 /* WitteTokenRefreshHandler.swift in Sources */,
-				D40AC0862292F673007E42AF /* WitteTokenProvider.swift in Sources */,
+				8C3B38A1238AC8BC00523EA2 /* TokenRefreshHandler.swift in Sources */,
+				D40AC0862292F673007E42AF /* TokenProvider.swift in Sources */,
 				D4EDF2B5228C4F2100198FC9 /* ViewController.swift in Sources */,
 				D4EDF2B3228C4F2100198FC9 /* AppDelegate.swift in Sources */,
+				FC8D2D7E1733BE3A325495D7 /* DemoOAuth2TokenRequest.swift in Sources */,
+				FC8D265DA3CCF55547DEFB7F /* DemoSdkTokenRequest.swift in Sources */,
+				FC8D20B40268A234CBF7004C /* BackendAccessorProtocol.swift in Sources */,
+				FC8D25191E4EBF88D275088C /* DemoBackendAccessor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,7 +323,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -362,7 +378,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -379,13 +395,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = J4N5TT7VQW;
+				DEVELOPMENT_TEAM = 54BW5K8Y67;
 				INFOPLIST_FILE = "witte-mobile-sample/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "digital.witte.witte-mobile-sample";
+				PRODUCT_BUNDLE_IDENTIFIER = digital.witte.mobile.sample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -400,13 +416,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = J4N5TT7VQW;
+				DEVELOPMENT_TEAM = 54BW5K8Y67;
 				INFOPLIST_FILE = "witte-mobile-sample/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "digital.witte.witte-mobile-sample";
+				PRODUCT_BUNDLE_IDENTIFIER = digital.witte.mobile.sample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;

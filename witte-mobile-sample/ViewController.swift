@@ -1,40 +1,31 @@
-//
-//  ViewController.swift
-//  witte-mobile-sample
-//
-
 import UIKit
 import TapkeyMobileLib
 import witte_mobile_library
 
 class ViewController: UIViewController {
+    private var tokenProvider: TokenProvider!
+    private var tapkeyKeyManager: TKMKeyManager?
+    private var tapkeyUserManager: TKMUserManager?
+    private var tapkeyBleLockScanner: TKMBleLockScanner?
+    private var tapkeyBleLockCommunicator: TKMBleLockCommunicator?
+    private var tapkeyCommandExecutionFacade: TKMCommandExecutionFacade?
+    private var tapkeyNotificationManager: TKMNotificationManager?
+    private var tapkeyKeys: [TKMKeyDetails] = []
 
-    private var _witteConfiguration: WDConfiguration!
-    private var _witteTokenProvider: WitteTokenProvider!
-    private var _witteUserId: Int = 0
+    private var tapkeyStartForegroundScanRegistration: TKMObserverRegistration?
+    private var tapkeyKeyObserverRegistration: TKMObserverRegistration?
+    private var tapkeyBluetoothStateObserverRegistration: TKMObserverRegistration?
 
-    private var _tapkeyKeyManager: TKMKeyManager?
-    private var _tapkeyUserManager: TKMUserManager?
-    private var _tapkeyBleLockScanner: TKMBleLockScanner?
-    private var _tapkeyBleLockCommunicator: TKMBleLockCommunicator?
-    private var _tapkeyCommandExecutionFacade: TKMCommandExecutionFacade?
-    private var _tapkeyNotificationManager: TKMNotificationManager?
-    private var _tapkeyKeys: [TKMKeyDetails] = []
-
-    private var _tapkeyStartForegroundScanRegistration: TKMObserverRegistration?
-    private var _tapkeyKeyObserverRegistration: TKMObserverRegistration?
-    private var _tapkeyBluetoothStateObserverRegistration: TKMObserverRegistration?
-
-    @IBOutlet weak var _labelCustomerId: UILabel!
-    @IBOutlet weak var _labelSubscriptionKey: UILabel!
-    @IBOutlet weak var _labelSdkKey: UILabel!
-    @IBOutlet weak var _labelUserId: UILabel!
-    @IBOutlet weak var _labelKeys: UILabel!
-    @IBOutlet weak var _buttonLogin: UIButton!
-    @IBOutlet weak var _buttonLogout: UIButton!
-    @IBOutlet weak var _buttonTriggerLock: UIButton!
-    @IBOutlet weak var _buttonReloadLocalKeys: UIButton!
-    @IBOutlet weak var _textFieldBoxId: UITextField!
+    @IBOutlet weak var labelCustomerId: UILabel!
+    @IBOutlet weak var labelSubscriptionKey: UILabel!
+    @IBOutlet weak var labelSdkKey: UILabel!
+    @IBOutlet weak var labelUserId: UILabel!
+    @IBOutlet weak var labelKeys: UILabel!
+    @IBOutlet weak var buttonLogin: UIButton!
+    @IBOutlet weak var buttonLogout: UIButton!
+    @IBOutlet weak var buttonTriggerLock: UIButton!
+    @IBOutlet weak var buttonReloadLocalKeys: UIButton!
+    @IBOutlet weak var textFieldBoxId: UITextField!
 
     @IBAction func actionLogin(_ sender: Any) {
         login()
@@ -54,87 +45,90 @@ class ViewController: UIViewController {
     @IBAction func actionReloadLocalKeys(_ sender: Any) {
         queryLocalKeys()
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         let app: AppDelegate = UIApplication.shared.delegate as! AppDelegate
-        _witteConfiguration = app.witteConfiguration
-        _witteTokenProvider = app.witteTokenProvider
-        _witteUserId = app.witteUserId
+        tokenProvider = app.tokenProvider
 
-        let tapkeyServiceFactory = app.tapkeyServiceFactory
-        _tapkeyKeyManager = tapkeyServiceFactory.keyManager
-        _tapkeyUserManager = tapkeyServiceFactory.userManager
-        _tapkeyBleLockScanner = tapkeyServiceFactory.bleLockScanner
-        _tapkeyBleLockCommunicator = tapkeyServiceFactory.bleLockCommunicator
-        _tapkeyCommandExecutionFacade = tapkeyServiceFactory.commandExecutionFacade
-        _tapkeyNotificationManager = tapkeyServiceFactory.notificationManager
+        let tapkeyServiceFactory = app.tapkeyServiceFactory!
+        tapkeyKeyManager = tapkeyServiceFactory.keyManager
+        tapkeyUserManager = tapkeyServiceFactory.userManager
+        tapkeyBleLockScanner = tapkeyServiceFactory.bleLockScanner
+        tapkeyBleLockCommunicator = tapkeyServiceFactory.bleLockCommunicator
+        tapkeyCommandExecutionFacade = tapkeyServiceFactory.commandExecutionFacade
+        tapkeyNotificationManager = tapkeyServiceFactory.notificationManager
 
-        // update label content
-        _labelCustomerId.text = String(_witteConfiguration.witteCustomerId)
-        _labelSubscriptionKey.text = _witteConfiguration.witteSubscriptionKey
-        _labelSdkKey.text = _witteConfiguration.witteSdkKey
-        _labelUserId.text = String(app.witteUserId)
-        
-        // initially disable triggerLock button
+        // Update label content
+        labelCustomerId.text = String(DemoBackendAccessor.FlinkeyCustomerId)
+        labelSubscriptionKey.text = DemoBackendAccessor.FlinkeyApiKey
+        labelSdkKey.text = DemoBackendAccessor.FlinkeySdkKey
+        labelUserId.text = String(DemoBackendAccessor.FlinkeyUserId)
+
+        // Initially disable triggerLock button
         updateButtonStates()
 
-        // hide keyboard on tap
+        // Hide keyboard on tap
         view.addGestureRecognizer(UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:))))
     }
 
+    /**
+     Checks if a user is logged in to the Tapkey Mobile Library.
+     - Returns: true is a user is logged in
+     */
     private func isUserLoggedIn() -> Bool {
         var isLoggedIn = false
-        
-        if(nil != _tapkeyUserManager) {
-            let userIds = _tapkeyUserManager?.users
-            if(nil != userIds && 1 == userIds?.count) {
-                isLoggedIn = true
-            }
+
+        let userIds = tapkeyUserManager?.users
+        if (nil != userIds && 1 == userIds?.count) {
+            isLoggedIn = true
         }
-        
+
         return isLoggedIn
     }
-    
+
+    /**
+     Updates UI controls according to the state of the users login.
+     */
     private func updateButtonStates() {
         if !isUserLoggedIn() {
-            // user not authenticated
-            _buttonLogin.isEnabled = true
-            _buttonLogout.isEnabled = false
-            _buttonTriggerLock.isEnabled = false
-            _buttonReloadLocalKeys.isEnabled = false
-            _labelKeys.text = ""
-        }
-        else {
-            // user is authenticated
-            _buttonLogin.isEnabled = false
-            _buttonLogout.isEnabled = true;
-            _buttonTriggerLock.isEnabled = true
-            _buttonReloadLocalKeys.isEnabled = true
+            buttonLogin.isEnabled = true
+            buttonLogout.isEnabled = false
+            buttonTriggerLock.isEnabled = false
+            buttonReloadLocalKeys.isEnabled = false
+            labelKeys.text = ""
+        } else {
+            buttonLogin.isEnabled = false
+            buttonLogout.isEnabled = true;
+            buttonTriggerLock.isEnabled = true
+            buttonReloadLocalKeys.isEnabled = true
         }
     }
-    
-    //
-    // Login to the Tapkey SDK
-    //
+
+    /**
+     Authenticates a user with the Tapkey Mobile Library.
+     */
     private func login() {
-        if !isUserLoggedIn() {
-            // query access token
-            _witteTokenProvider.accessToken()
-                .continueOnUi { (accesToken: String?) -> Void in
-                    
-                    // login to Tapkey backend
-                    self._tapkeyUserManager!.logInAsync(accessToken: accesToken!, cancellationToken: TKMCancellationTokens.None)
-                        .continueOnUi{ (userId: String?) -> Void in
-                            // update ui
-                            self.updateButtonStates()
-                            
-                            // start scanning for flinkey boxes
-                            self.startScanning()
-                            
-                            // retrieve keys for the current user
-                            self._tapkeyNotificationManager!.pollForNotificationsAsync(cancellationToken: TKMCancellationTokens.None)
+        if isUserLoggedIn() {
+            return
+        }
+
+        tokenProvider
+                .accessToken()
+                .continueAsyncOnUi { accessToken -> TKMPromise<String> in
+                    self.tapkeyUserManager!.logInAsync(accessToken: accessToken!, cancellationToken: TKMCancellationTokens.None)
+                }
+                .continueOnUi { (userId: String?) -> Void in
+                    // Update UI
+                    self.updateButtonStates()
+
+                    // Start scanning for flinkey boxes
+                    self.startScanning()
+
+                    // Synchronize digital keys
+                    self.tapkeyNotificationManager!
+                            .pollForNotificationsAsync(cancellationToken: TKMCancellationTokens.None)
                             .continueOnUi({ Void in
                                 self.queryLocalKeys()
                                 return nil
@@ -142,252 +136,245 @@ class ViewController: UIViewController {
                             .catchOnUi({ (error: TKMAsyncError) -> Void in
                             })
                             .conclude();
-                        }
-                        .catchOnUi{(error) -> Void in
-                            print("Authentication failed.")
-                        }
-                        .conclude();
                 }
                 .catchOnUi { (error: TKMAsyncError?) -> Void in
-                    print("Access token query failed. \(String(describing: error?.localizedDescription))")
+                    print("Login failed. \(String(describing: error?.localizedDescription))")
                 }
                 .conclude()
-        }
+
     }
 
-    //
-    // Logout from the Tapkey SDK
-    //
+    /**
+     Logs the user out from the Tapkey Mobile Library.
+     */
     private func logout() {
-        if isUserLoggedIn() {
-            let userId = _tapkeyUserManager!.users[0]
-            _tapkeyUserManager!
+        if !isUserLoggedIn() {
+            updateButtonStates()
+            return
+        }
+
+        let userId = tapkeyUserManager!.users[0]
+        tapkeyUserManager!
                 .logOutAsync(userId: userId, cancellationToken: TKMCancellationTokens.None)
-                .continueOnUi{_ in
-                }
-                .catchOnUi({ (error: TKMAsyncError) -> Void in
-                    print(error.localizedDescription)
-                })
                 .finallyOnUi {
                     self.updateButtonStates()
                 }
                 .conclude()
-        }
-        else {
-            self.updateButtonStates()
-        }
     }
 
-    //
-    // Start scanning for flinkey boxes
-    //
+    /**
+     Starts scanning for flinkey boxes.
+     */
     private func startScanning() {
-        if(nil == _tapkeyStartForegroundScanRegistration) {
-            _tapkeyStartForegroundScanRegistration = _tapkeyBleLockScanner?.startForegroundScan()
+        if (nil == tapkeyStartForegroundScanRegistration) {
+            tapkeyStartForegroundScanRegistration = tapkeyBleLockScanner?.startForegroundScan()
         }
     }
 
-    //
-    // Stop scanning for flinkey boxes
-    //
+    /**
+     Stops scanning for flinkey boxes.
+     */
     private func stopScanning() {
-        if (nil != _tapkeyStartForegroundScanRegistration) {
-            _tapkeyStartForegroundScanRegistration?.close()
-            _tapkeyStartForegroundScanRegistration = nil
+        if (nil != tapkeyStartForegroundScanRegistration) {
+            tapkeyStartForegroundScanRegistration?.close()
+            tapkeyStartForegroundScanRegistration = nil
         }
     }
 
-    //
-    // query for this user's keys asynchronously
-    //
+    /**
+     Checks locally available digital keys.
+     */
     private func queryLocalKeys() {
-        if isUserLoggedIn() {
-            let userId = _tapkeyUserManager!.users[0]
-            _tapkeyKeyManager!.queryLocalKeysAsync(userId: userId, cancellationToken: TKMCancellationTokens.None)
-                    .continueOnUi { (keys: [TKMKeyDetails]?) -> Void in
-                        self._tapkeyKeys = keys ?? [];
-                        
-                        var sb = ""
-                        for key in self._tapkeyKeys {
-                            let grant = key.grant
-                            if(nil != grant) {
-                                let physicalLockId = grant?.getBoundLock()?.getPhysicalLockId();
-                                let boxId = WDBoxIdConverter().toBoxId(withPhysicalLockId: physicalLockId!)
-                                let grantValidFrom = grant?.getValidFrom()?.toDate() ?? nil
-                                let grantValidBefore = grant?.getValidBefore()?.toDate() ?? nil
-                                let keyValidBefore = key.validBefore
-                                
-                                sb.append("• \(boxId)\n")
-                                sb.append(" grant starts: \(self.toIsoString(date: grantValidFrom))\n")
-                                if(nil != grantValidBefore) {
-                                    sb.append(" grant ends: \(self.toIsoString(date: grantValidBefore))\n")
-                                }
-                                else {
-                                    sb.append(" grant ends: unlimited\n")
-                                }
-                                
-                                sb.append(" valid before: \(self.toIsoString(date: keyValidBefore))\n")
-                            }
-                        }
-                        
-                        self._labelKeys.text = sb
-                    }
-                    .catchOnUi({ (error: TKMAsyncError) -> Void? in
-                        print("Query local keys failed.")
-                        return nil
-                    })
-                    .conclude()
+        if !isUserLoggedIn() {
+            return
         }
+
+        let userId = tapkeyUserManager!.users[0]
+        tapkeyKeyManager!.queryLocalKeysAsync(userId: userId, cancellationToken: TKMCancellationTokens.None)
+                .continueOnUi { (keys: [TKMKeyDetails]?) -> Void in
+                    self.tapkeyKeys = keys ?? [];
+
+                    var sb = ""
+                    for key in self.tapkeyKeys {
+                        let grant = key.grant
+                        if (nil != grant) {
+                            let physicalLockId = grant?.getBoundLock()?.getPhysicalLockId();
+                            let boxId = WDBoxIdConverter().toBoxId(withPhysicalLockId: physicalLockId!)
+                            let grantValidFrom = grant?.getValidFrom()?.toDate() ?? nil
+                            let grantValidBefore = grant?.getValidBefore()?.toDate() ?? nil
+                            let keyValidBefore = key.validBefore
+
+                            sb.append("• \(boxId)\n")
+                            sb.append(" grant starts: \(self.toIsoString(date: grantValidFrom))\n")
+                            if (nil != grantValidBefore) {
+                                sb.append(" grant ends: \(self.toIsoString(date: grantValidBefore))\n")
+                            } else {
+                                sb.append(" grant ends: unlimited\n")
+                            }
+
+                            sb.append(" valid before: \(self.toIsoString(date: keyValidBefore))\n")
+                        }
+                    }
+
+                    self.labelKeys.text = sb
+                }
+                .catchOnUi({ (error: TKMAsyncError) -> Void? in
+                    print("Query local keys failed.")
+                    return nil
+                })
+                .conclude()
+
     }
 
+    /**
+     Converts a date to an ISO 8601 string representation.
+     - Parameter date: Date
+     - Returns: ISO 8601 string
+     */
     open func toIsoString(date: Date?) -> String {
         var str = ""
-        
+
         if (date != nil) {
             let formatter = ISO8601DateFormatter()
             str = formatter.string(from: date!)
         }
-        
+
         return str;
     }
-    
-    //
-    // Open/close the flinkey box
-    //
+
+    /**
+     Opens of closes (triggers) a flinkey box.
+     */
     private func triggerLock() {
-        
-        // user needs to be logged in
-        if(!isUserLoggedIn()) {
+        // User needs to be logged in
+        if (!isUserLoggedIn()) {
             let alert = UIAlertController(title: nil, message: "Please login first", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
             present(alert, animated: true)
             return
         }
-        
-        // get box id from textfield
-        let boxId = _textFieldBoxId.text
-        if(nil == boxId || boxId!.isEmpty) {
+
+        // Get box id
+        let boxId = textFieldBoxId.text
+        if (nil == boxId || boxId!.isEmpty) {
             let alert = UIAlertController(title: nil, message: "Please enter your box ID", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
             present(alert, animated: true)
             return;
         }
 
-        // convert box id to physical lock id
+        // Convert box id to physical lock id
         let converter = WDBoxIdConverter()
         let physicalLockId = converter.toPhysicalLockId(withBoxId: boxId!);
-        if(physicalLockId.isEmpty) {
+        if (physicalLockId.isEmpty) {
             let alert = UIAlertController(title: nil, message: "\(boxId!) is not a valid box Id.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
             present(alert, animated: true)
             return;
         }
-        
-        // check if box is in reach
-        if(!_tapkeyBleLockScanner!.isLockNearby(physicalLockId: physicalLockId)) {
+
+        // Check if box is in reach
+        if (!tapkeyBleLockScanner!.isLockNearby(physicalLockId: physicalLockId)) {
             let alert = UIAlertController(title: nil, message: "The box \(boxId!) is not in reach.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
             present(alert, animated: true)
             return;
         }
-        
+
         // 60s timeout
         let timeoutMs: Int32 = 60 * 1000
         let timeout = TKMCancellationTokens.fromTimeout(timeoutMs: timeoutMs)
-        
-        let bluetoothAddress = _tapkeyBleLockScanner!.getLock(physicalLockId: physicalLockId)?.bluetoothAddress
-        if(nil != bluetoothAddress) {
-            _tapkeyBleLockCommunicator!
-                .executeCommandAsync(
-                    bluetoothAddress: bluetoothAddress!,
-                    physicalLockId: physicalLockId,
-                    commandFunc: { tlcpConnection in self._tapkeyCommandExecutionFacade!.triggerLockAsync(tlcpConnection, cancellationToken: timeout)},
-                    cancellationToken: timeout)
-                .continueOnUi{ (commandResult: TKMCommandResult?) -> Bool? in
-                    var success = false
-                                        
-                    // The TKMCommandResultCode indicates if triggerLockAsync completed successfully
-                    // or if an error occurred during the execution of the command.
-                    // https://developers.tapkey.io/mobile/ios/reference/TapkeyMobileLib/latest/Classes/TKMCommandResult.html
-                    let commandResultCode: TKMCommandResult.TKMCommandResultCode =
-                        commandResult?.code ?? TKMCommandResult.TKMCommandResultCode.technicalError
-                    
-                    switch commandResultCode {
-                    case TKMCommandResult.TKMCommandResultCode.ok:
+
+        let bluetoothAddress = tapkeyBleLockScanner!.getLock(physicalLockId: physicalLockId)?.bluetoothAddress
+        if (nil != bluetoothAddress) {
+            tapkeyBleLockCommunicator!
+                    .executeCommandAsync(
+                            bluetoothAddress: bluetoothAddress!,
+                            physicalLockId: physicalLockId,
+                            commandFunc: { tlcpConnection in self.tapkeyCommandExecutionFacade!.triggerLockAsync(tlcpConnection, cancellationToken: timeout) },
+                            cancellationToken: timeout)
+                    .continueOnUi { (commandResult: TKMCommandResult?) -> Bool? in
+                        var success = false
+
+                        // The TKMCommandResultCode indicates if triggerLockAsync completed successfully
+                        // or if an error occurred during the execution of the command.
+                        // https://developers.tapkey.io/mobile/ios/reference/TapkeyMobileLib/latest/Classes/TKMCommandResult.html
+                        let commandResultCode: TKMCommandResult.TKMCommandResultCode = commandResult?.code ?? TKMCommandResult.TKMCommandResultCode.technicalError
+
+                        switch commandResultCode {
+                        case TKMCommandResult.TKMCommandResultCode.ok:
                             success = true
-                        let responseData = commandResult?.responseData
-                        if(nil != responseData) {
-                            let bytes = responseData! as! IOSByteArray
-                            let data = bytes.toNSData()
-                            let boxFeedback = WDBoxFeedback(responseData: data!)
-                            
-                            if(WDBoxState.unlocked == boxFeedback.boxState) {
-                                print("Box has been opened")
+                            let responseData = commandResult?.responseData
+                            if (nil != responseData) {
+                                let bytes = responseData! as! IOSByteArray
+                                let data = bytes.toNSData()
+                                let boxFeedback = WDBoxFeedback(responseData: data!)
+
+                                if (WDBoxState.unlocked == boxFeedback.boxState) {
+                                    print("Box has been opened")
+                                } else if (WDBoxState.locked == boxFeedback.boxState) {
+                                    print("Box has been closed")
+                                } else if (WDBoxState.drawerOpen == boxFeedback.boxState) {
+                                    print("The drawer of the Box is open")
+                                }
                             }
-                            else if(WDBoxState.locked == boxFeedback.boxState) {
-                                print("Box has been closed")
+                        case TKMCommandResult.TKMCommandResultCode.lockCommunicationError:
+                            print("A transport-level error occurred when communicating with the locking device")
+                        case TKMCommandResult.TKMCommandResultCode.lockDateTimeInvalid:
+                            print("Lock date/time are invalid.")
+                        case TKMCommandResult.TKMCommandResultCode.serverCommunicationError:
+                            print("An error occurred while trying to communicate with the Tapkey Trust Service (e.g. due to bad internet connection).")
+                        case TKMCommandResult.TKMCommandResultCode.technicalError:
+                            print("Some unspecific technical error has occurred.")
+                        case TKMCommandResult.TKMCommandResultCode.unauthorized:
+                            print("Communication with the security backend succeeded but the user is not authorized for the given command on this locking device.")
+                        case TKMCommandResult.TKMCommandResultCode.userSpecificError:
+                            // If there is a userSpecificError we need to have look at the list
+                            // of TKMUserCommandResults in order to determine what exactly caused the error
+                            // https://developers.tapkey.io/mobile/ios/reference/TapkeyMobileLib/latest/Classes/TKMCommandResult/TKMUserCommandResult.html
+                            let userCommandResults = commandResult?.userCommandResults
+                            for userCommandResult in userCommandResults! {
+                                print("triggerLockAsync failed with UserSpecificError and UserCommandResultCode \(userCommandResult.code)");
+                                print(userCommandResult.code)
                             }
-                            else if(WDBoxState.drawerOpen == boxFeedback.boxState) {
-                                print("The drawer of the Box is open")
-                            }
+                        default:
+                            print("triggerLock failed with error")
                         }
-                    case TKMCommandResult.TKMCommandResultCode.lockCommunicationError:
-                        print("A transport-level error occurred when communicating with the locking device")
-                    case TKMCommandResult.TKMCommandResultCode.lockDateTimeInvalid:
-                        print("Lock date/time are invalid.")
-                    case TKMCommandResult.TKMCommandResultCode.serverCommunicationError:
-                        print("An error occurred while trying to communicate with the Tapkey Trust Service (e.g. due to bad internet connection).")
-                    case TKMCommandResult.TKMCommandResultCode.technicalError:
-                        print("Some unspecific technical error has occurred.")
-                    case TKMCommandResult.TKMCommandResultCode.unauthorized:
-                        print("Communication with the security backend succeeded but the user is not authorized for the given command on this locking device.")
-                    case TKMCommandResult.TKMCommandResultCode.userSpecificError:
-                        // If there is a userSpecificError we need to have look at the list
-                        // of TKMUserCommandResults in order to determine what exactly caused the error
-                        // https://developers.tapkey.io/mobile/ios/reference/TapkeyMobileLib/latest/Classes/TKMCommandResult/TKMUserCommandResult.html
-                        let userCommandResults = commandResult?.userCommandResults
-                        for userCommandResult in userCommandResults! {
-                            print("triggerLockAsync failed with UserSpecificError and UserCommandResultCode \(userCommandResult.code)");
-                            print(userCommandResult.code)
-                        }
-                    default:
-                        print("triggerLock failed with error")
-                    }
                         return success
-                }
-                .catchOnUi{ (error: TKMAsyncError) -> Bool? in
-                    print("triggerLock failed")
-                    return false
-                }
-                .conclude()
+                    }
+                    .catchOnUi { (error: TKMAsyncError) -> Bool? in
+                        print("triggerLock failed")
+                        return false
+                    }
+                    .conclude()
         }
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
-        if (nil == _tapkeyKeyObserverRegistration) {
-            _tapkeyKeyObserverRegistration = _tapkeyKeyManager?.keyUpdateObservable.addObserver({ _ in
+        if (nil == tapkeyKeyObserverRegistration) {
+            tapkeyKeyObserverRegistration = tapkeyKeyManager?.keyUpdateObservable.addObserver({ _ in
                 self.queryLocalKeys()
             })
         }
 
-        if (nil == _tapkeyBluetoothStateObserverRegistration) {
-            _tapkeyBluetoothStateObserverRegistration = _tapkeyBleLockScanner?.observable.addObserver({ _ in
-                print("flinkey box availablilty changed")
+        if (nil == tapkeyBluetoothStateObserverRegistration) {
+            tapkeyBluetoothStateObserverRegistration = tapkeyBleLockScanner?.observable.addObserver({ _ in
+                print("flinkey box availability changed")
             })
         }
-        
+
         startScanning()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        if (nil != _tapkeyKeyObserverRegistration) {
-            _tapkeyKeyObserverRegistration!.close();
-            _tapkeyKeyObserverRegistration = nil;
+        if (nil != tapkeyKeyObserverRegistration) {
+            tapkeyKeyObserverRegistration!.close();
+            tapkeyKeyObserverRegistration = nil;
         }
 
-        if (nil != _tapkeyBluetoothStateObserverRegistration) {
-            _tapkeyBluetoothStateObserverRegistration!.close();
-            _tapkeyBluetoothStateObserverRegistration = nil;
+        if (nil != tapkeyBluetoothStateObserverRegistration) {
+            tapkeyBluetoothStateObserverRegistration!.close();
+            tapkeyBluetoothStateObserverRegistration = nil;
         }
 
         stopScanning()
