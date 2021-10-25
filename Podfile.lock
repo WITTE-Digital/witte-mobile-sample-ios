@@ -4,22 +4,19 @@ PODS:
     - AppAuth/ExternalUserAgent (= 1.3.0)
   - AppAuth/Core (1.3.0)
   - AppAuth/ExternalUserAgent (1.3.0)
-  - GsonJ2ObjC-Light (2.3.1-2):
-    - J2ObjC/JreCore (= 2.1.1-2)
-  - J2ObjC/JreCore (2.1.1-2)
-  - J2ObjC/JreUtil (2.1.1-2):
-    - J2ObjC/JreCore
+  - GsonJ2ObjC-Light (2.8.6):
+    - JRE-Slim (= 2.8.1-tk)
+  - JRE-Slim (2.8.1-tk)
   - SocketRocket (0.5.1)
-  - TapkeyMobileLib (2.12.7.0):
-    - GsonJ2ObjC-Light (= 2.3.1-2)
-    - J2ObjC/JreCore (= 2.1.1-2)
-    - J2ObjC/JreUtil (= 2.1.1-2)
+  - TapkeyMobileLib (2.18.0.1):
+    - GsonJ2ObjC-Light (= 2.8.6)
+    - JRE-Slim (= 2.8.1-tk)
     - SocketRocket (= 0.5.1)
   - witte-mobile-library (1.0.0)
 
 DEPENDENCIES:
   - AppAuth
-  - TapkeyMobileLib (= 2.12.7.0)
+  - TapkeyMobileLib (= 2.18.0.1)
   - witte-mobile-library (= 1.0.0)
 
 SPEC REPOS:
@@ -27,7 +24,7 @@ SPEC REPOS:
     - witte-mobile-library
   https://github.com/tapkey/TapkeyCocoaPods:
     - GsonJ2ObjC-Light
-    - J2ObjC
+    - JRE-Slim
     - TapkeyMobileLib
   trunk:
     - AppAuth
@@ -35,12 +32,12 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   AppAuth: 73574f3013a1e65b9601a3ddc8b3158cce68c09d
-  GsonJ2ObjC-Light: dc1d84f6d10ae0212a04a6ca8b9e91565ae240fa
-  J2ObjC: 75f0e1eaa1a3c2ae26d7d78276cf68a7cdde850f
+  GsonJ2ObjC-Light: ddc7e96a0a9be2fa1858d5023e05fb671a8c0f6a
+  JRE-Slim: 817b48b715e7d263d5e13839f9daf22273208e8b
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
-  TapkeyMobileLib: 60631f5f5c3156212ec30ffe3abdef2588acd956
+  TapkeyMobileLib: 9af29efd88abcef3ded48e19ef2e21aa808d96c0
   witte-mobile-library: 3d02d77e5226a6f79e19b5f913e128e0e644c65c
 
-PODFILE CHECKSUM: ed8a75b59479ed4bc7d537a0251272780d51c8b5
+PODFILE CHECKSUM: f5315467544ba7d34b5d78dbc9d35a72375fc8ce
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2

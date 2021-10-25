@@ -13,14 +13,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Create Tapkey configuration
         let config = TKMEnvironmentConfigBuilder()
-                .setbleServiceUuid(WD_BLE_SERIVCE_UUID)
-                .setTenantId(WD_TENANT_ID)
-                .build()
+            .setTenantId("wma")
+            .build()
+
+        let bleAdvertisingFormat = TKMBleAdvertisingFormatBuilder()
+            .addV1Format(serviceUuid: "6e65742e-7470-6ba0-0000-060601810057")
+            .addV2Format(domainId: 0x5754)
+            .build()
 
         // Create Tapkey service factory
         tapkeyServiceFactory = TKMServiceFactoryBuilder()
                 .setConfig(config)
-                .setTokenRefreshHandler(TokenRefreshHandler(tokenProvider: tokenProvider))
+                .setBluetoothAdvertisingFormat(bleAdvertisingFormat)
+                .setTokenRefreshHandler(TokenRefreshHandler(tokenProvider: tokenProvider))                
                 .build()
 
         return true
