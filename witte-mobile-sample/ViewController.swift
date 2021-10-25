@@ -284,14 +284,18 @@ class ViewController: UIViewController {
         // 60s timeout
         let timeoutMs: Int32 = 60 * 1000
         let timeout = TKMCancellationTokens.fromTimeout(timeoutMs: timeoutMs)
-
         let bluetoothAddress = tapkeyBleLockScanner!.getLock(physicalLockId: physicalLockId)?.bluetoothAddress
         if (nil != bluetoothAddress) {
             tapkeyBleLockCommunicator!
                     .executeCommandAsync(
                             bluetoothAddress: bluetoothAddress!,
                             physicalLockId: physicalLockId,
-                            commandFunc: { tlcpConnection in self.tapkeyCommandExecutionFacade!.triggerLockAsync(tlcpConnection, cancellationToken: timeout) },
+                            commandFunc: { tlcpConnection -> TKMPromise<TKMCommandResult> in
+                                let triggerLockCommand = TKMDefaultTriggerLockCommandBuilder().build()
+                            
+                                // Pass the TLCP connection to the command execution facade
+                                return self.tapkeyCommandExecutionFacade!.executeStandardCommandAsync(tlcpConnection, command: triggerLockCommand, cancellationToken: timeout)
+                            },
                             cancellationToken: timeout)
                     .continueOnUi { (commandResult: TKMCommandResult?) -> Bool? in
                         var success = false
