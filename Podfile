@@ -1,12 +1,13 @@
 source 'https://github.com/tapkey/TapkeyCocoaPods'
 source 'https://cdn.cocoapods.org/'
 
-platform :ios, '9.0'
-use_frameworks!
+platform :ios, '10.0'
+inhibit_all_warnings!
+
 
 target 'witte-mobile-sample' do
-  # Pods for witte-mobile-sample
+  use_frameworks!
   pod 'AppAuth'
-  pod 'TapkeyMobileLib', '2.18.0.1'
+  pod 'TapkeyMobileLib', '2.21.2.2'
   pod 'witte-mobile-library', '1.0.0'
 end
