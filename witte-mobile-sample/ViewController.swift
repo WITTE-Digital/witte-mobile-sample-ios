@@ -134,8 +134,6 @@ class ViewController: UIViewController {
         // Initially disable triggerLock button
         updateButtonStates()
         
-        textFieldBoxId.text = "C3-49-EE-54"
-        
         // Hide keyboard on tap
         view.addGestureRecognizer(
             UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:))))
