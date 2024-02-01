@@ -44,36 +44,36 @@ class DemoBackendAccessor: BackendAccessorProtocol {
 
     /**
      Called to retrieve a flinkey idToken for the current user.
-
+     
      - Returns: Promise to flinkey idToken (JWT)
      */
     func requestIdToken() -> TKMPromise<String> {
         let promiseSource = TKMPromiseSource<String>()
-
+        
         DemoOAuth2TokenRequest()
-                .execute(withApiKey: DemoBackendAccessor.FlinkeyApiKey,
-                        andApiManagerUsername: DemoBackendAccessor.FlinkeyApiManagerUsername,
-                        andApiManagerPassword: DemoBackendAccessor.FlinkeyApiManagerPassword)
-                .continueAsyncOnUi { accessToken -> TapkeyMobileLib.TKMPromise<String> in
-                    DemoSdkTokenRequest().execute(withCustomerId: DemoBackendAccessor.FlinkeyCustomerId,
-                            andApiKey: DemoBackendAccessor.FlinkeyApiKey,
-                            andSdkKey: DemoBackendAccessor.FlinkeySdkKey,
-                            andUserId: DemoBackendAccessor.FlinkeyUserId,
-                            andAccessToken: accessToken!)
+            .execute(withApiKey: DemoBackendAccessor.FlinkeyApiKey,
+                     andApiManagerUsername: DemoBackendAccessor.FlinkeyApiManagerUsername,
+                     andApiManagerPassword: DemoBackendAccessor.FlinkeyApiManagerPassword)
+            .continueAsyncOnUi { accessToken -> TapkeyMobileLib.TKMPromise<String> in
+                DemoSdkTokenRequest().execute(withCustomerId: DemoBackendAccessor.FlinkeyCustomerId,
+                                              andApiKey: DemoBackendAccessor.FlinkeyApiKey,
+                                              andSdkKey: DemoBackendAccessor.FlinkeySdkKey,
+                                              andUserId: DemoBackendAccessor.FlinkeyUserId,
+                                              andAccessToken: accessToken!)
+            }
+            .continueOnUi { flinkeyIdToken -> Void in
+                if(!(flinkeyIdToken ?? "").isEmpty) {
+                    promiseSource.setResult(flinkeyIdToken)
                 }
-                .continueOnUi { flinkeyIdToken -> Void in
-                    if(!(flinkeyIdToken ?? "").isEmpty) {
-                        promiseSource.setResult(flinkeyIdToken)
-                    }
-                    else {
-                        promiseSource.setError(TKMError(errorCode: "Failed to retrieve flinkey idToken."))
-                    }
+                else {
+                    promiseSource.setError(TKMError(errorCode: "Failed to retrieve flinkey idToken."))
                 }
-                .catchOnUi { error -> Void in
-                    promiseSource.setError(error)
-                }
-                .conclude()
-
+            }
+            .catchOnUi { error -> Void in
+                promiseSource.setError(error)
+            }
+            .conclude()
+        
         return promiseSource.promise
     }
 }
