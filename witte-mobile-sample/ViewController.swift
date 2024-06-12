@@ -82,7 +82,7 @@ class ViewController: UIViewController {
      - Parameter sender: The object that triggered the action.
      */
     @IBAction func actionUnlock(_ sender: Any) {
-        let data: Data = WDBoxCommandBuilder.buildUnlockCarUnlockBox()
+        let data: Data = WDBoxCommandBuilder.buildUnlockCarUnlockBox(true)
         executeBoxCommand(boxCommandData: data.base64EncodedString())
     }
     
@@ -92,7 +92,7 @@ class ViewController: UIViewController {
      - Parameter sender: The object that triggered the action.
      */
     @IBAction func actionLock(_ sender: Any) {
-        let data: Data = WDBoxCommandBuilder.buildLockCarLockBox()
+        let data: Data = WDBoxCommandBuilder.buildLockCarLockBox(true)
         executeBoxCommand(boxCommandData: data.base64EncodedString())
     }
     
@@ -434,6 +434,10 @@ class ViewController: UIViewController {
                                     } else {
                                         print("Box has been locked")
                                     }
+                            
+                                    print("NFC tag 1 UID: " + (bf?.nfcTag1Uid ?? "nil"))
+                                    print("NFC tag 2 UID: " + (bf?.nfcTag2Uid ?? "nil"))
+                                    print("NFC tag 3 UID: " + (bf?.nfcTag3Uid ?? "nil"))
                                 }
                             }
                         }
